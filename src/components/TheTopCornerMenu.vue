@@ -266,12 +266,11 @@ export default class TheTopCornerMenu extends Mixins(BaseMixin) {
     }
     async shutdownPrinter() {
         this.showMenu = false;
-        const name_of_switch = 'switch.ledvance';
         const entity: AuthData = {
             token: import.meta.env.VUE_APP_TOKEN,
-            data: { "entity_id": `${name_of_switch}`}
+            data: { "entity_id": `${import.meta.env.VUE_APP_SWITCH_NAME}`}
         }
-        const state_of_switch = `${import.meta.env.VUE_APP_HOME_ASSISTANT_URI}/api/states/${name_of_switch}`;
+        const state_of_switch = `${import.meta.env.VUE_APP_HOME_ASSISTANT_URI}/api/states/${import.meta.env.VUE_APP_SWITCH_NAME}`;
         const turn_off_url = `${import.meta.env.VUE_APP_HOME_ASSISTANT_URI}/api/services/switch/turn_off`;
         fetch(state_of_switch,{
             method: 'GET',
