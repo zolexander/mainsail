@@ -164,10 +164,6 @@ export default class KlippyStatePanel extends Mixins(BaseMixin) {
             token: import.meta.env.VUE_APP_TOKEN,
             data: { "entity_id": `${name_of_switch}`}
         }
-        const headers = { Authorization: `Bearer ${entity.token}`,
-                        'Access-Control-Allow-Origin': '*',
-                        'Content-Type': 'application/json',
-         };
         const state_of_switch = `${import.meta.env.VUE_APP_HOME_ASSISTANT_URI}/api/states/${name_of_switch}`;
         const turn_on_url = `${import.meta.env.VUE_APP_HOME_ASSISTANT_URI}/api/services/switch/turn_on`;
         fetch(state_of_switch,{
