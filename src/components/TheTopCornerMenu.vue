@@ -271,10 +271,6 @@ export default class TheTopCornerMenu extends Mixins(BaseMixin) {
             token: import.meta.env.VUE_APP_TOKEN,
             data: { "entity_id": `${name_of_switch}`}
         }
-        const headers = { Authorization: `Bearer ${entity.token}`,
-                        'Access-Control-Allow-Origin': '*',
-                        'Content-Type': 'application/json',
-         };
         const state_of_switch = `${import.meta.env.VUE_APP_HOME_ASSISTANT_URI}/api/states/${name_of_switch}`;
         const turn_off_url = `${import.meta.env.VUE_APP_HOME_ASSISTANT_URI}/api/services/switch/turn_off`;
         fetch(state_of_switch,{
