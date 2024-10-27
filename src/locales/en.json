@@ -117,12 +117,14 @@
             "KlipperFirmwareRestart": "Firmware Restart",
             "KlipperRestart": "Restart",
             "PowerDevices": "Power Devices",
+            "PowerOff": "Turn printer off",
             "Reboot": "Reboot",
             "Restart": "Restart",
             "ServiceControl": "Service Control",
             "Shutdown": "Shutdown",
             "Start": "Start",
             "Stop": "Stop"
+            
         },
         "UpdateDialog": {
             "Close": "Close",
@@ -652,7 +654,8 @@
             "PrinterSwitchedOff": "Printer is powered off",
             "PrinterSwitchedOffDescription": "The printer is currently powered off and Klipper cannot connect. To power on the printer, click the button below:",
             "Restart": "Restart",
-            "ServiceReports": "{service} reports"
+            "ServiceReports": "{service} reports",
+            "TurnOnPrinter": "Turn printer on"
         },
         "MachineSettingsPanel": {
             "Headline": "Machine",

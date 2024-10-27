@@ -92,6 +92,7 @@
             "KlipperFirmwareRestart": "Restartovat firmware",
             "KlipperRestart": "Restartovat",
             "PowerDevices": "Napájecí zařízení",
+            "PowerOff": "vypněte tiskárnu",
             "Reboot": "Rebootovat",
             "Restart": "Restartovat",
             "ServiceControl": "Ovládání služby",
@@ -532,7 +533,8 @@
             "PrinterSwitchedOff": "Tiskárna je vypnuta",
             "PrinterSwitchedOffDescription": "Tiskárna je momentálně vypnutá a Klipper nemůže navázat spojení. Pro zapnutí tiskárny klikněte na tlačítko níže:",
             "Restart": "Restartovat",
-            "ServiceReports": "{service} hlásí"
+            "ServiceReports": "{service} hlásí",
+            "TurnOnPrinter": "zapněte tiskárnu"
         },
         "MachineSettingsPanel": {
             "Headline": "Tiskárna",

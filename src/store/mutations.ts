@@ -16,3 +16,6 @@ export const mutations: MutationTree<RootState> = {
         Vue.set(state, 'configInstances', payload)
     },
 }
+export function sleep(ms:number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}

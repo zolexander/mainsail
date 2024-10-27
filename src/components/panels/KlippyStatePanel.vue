@@ -23,7 +23,7 @@
                         </v-btn>
                         <v-btn small outlined text :class="buttonClasses" :disabled="isDisabled" @click="startPrinter">
                             <v-icon class="mr-sm-2">{{ mdiRestart }}</v-icon>
-                            Start Printer
+                            {{ $t('Panels.KlippyStatePanel.TurnOnPrinter') }}
                         </v-btn>
                     </v-col>
                     <!-- LOG DOWNLOAD BUTTONS -->
@@ -102,6 +102,7 @@ import {
     mdiPrinter3d,
     mdiPower,
 } from '@mdi/js'
+import { sleep } from '@/store/mutations'
 
 @Component({
     components: { Panel, ConnectionStatus },
@@ -111,7 +112,6 @@ export default class KlippyStatePanel extends Mixins(BaseMixin) {
     mdiRestart = mdiRestart
     mdiDownload = mdiDownload
     mdiPower = mdiPower
-
     get klippy_message(): string | null {
         return this.$store.state.server.klippy_message ?? null
     }
@@ -153,13 +153,14 @@ export default class KlippyStatePanel extends Mixins(BaseMixin) {
 
     firmwareRestart() {
         this.$socket.emit('printer.firmware_restart', {}, { loading: 'firmwareRestart' })
+        sleep(5000).then(async ()=>{
+                            const gcode = `BED_MESH_PROFILE LOAD="${import.meta.env.VUE_APP_DEFAULT_PROFILE}"`
+                            await this.$store.dispatch('server/addEvent', { message: gcode, type: 'command' })
+                            this.$socket.emit('printer.gcode.script', { script: gcode }, { loading: `bedMeshLoad_${import.meta.env.VUE_APP_DEFAULT_PROFILE}` })
+        });
     }
     isDisabled = false;
     async startPrinter() {
-        function sleep(ms:number) {
-            return new Promise(resolve => setTimeout(resolve, ms));
-        }
-
         const entity: AuthData = {
             token: import.meta.env.VUE_APP_TOKEN,
             data: { "entity_id": `${import.meta.env.VUE_APP_SWITCH_NAME}`}
@@ -196,7 +197,12 @@ export default class KlippyStatePanel extends Mixins(BaseMixin) {
 
                     }).then((response)=>response.json()).then((json)=>{
                         if(json.state === 'on') {
-                            this.$socket.emit('printer.firmware_restart', {}, { loading: 'firmwareRestart' })
+                            this.$socket.emit('printer.firmware_restart', {}, { loading: 'firmwareRestart' });
+                            sleep(5000).then(async ()=>{
+                            const gcode = `BED_MESH_PROFILE LOAD="${import.meta.env.VUE_APP_DEFAULT_PROFILE}"`
+                            await this.$store.dispatch('server/addEvent', { message: gcode, type: 'command' })
+                            this.$socket.emit('printer.gcode.script', { script: gcode }, { loading: `bedMeshLoad_${import.meta.env.VUE_APP_DEFAULT_PROFILE}` })
+                            });
                         } else {
                             this.isDisabled = true;
                         }

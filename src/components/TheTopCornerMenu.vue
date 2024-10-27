@@ -111,7 +111,7 @@
                     </v-list-item-action>
                 </v-list-item>
                 <v-list-item class="minheight30 pr-2" link @click="shutdownPrinter">
-                    <v-list-item-title>Shutdown Printer</v-list-item-title>
+                    <v-list-item-title>{{ $t('App.TopCornerMenu.PowerOff') }}</v-list-item-title>
                     <v-list-item-action class="my-0 d-flex flex-row" style="min-width: auto">
                         <v-icon class="mr-2" small>{{ mdiPower }}</v-icon>
                     </v-list-item-action>

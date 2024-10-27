@@ -117,6 +117,7 @@
             "KlipperFirmwareRestart": "Firmware Neustart",
             "KlipperRestart": "Neustart",
             "PowerDevices": "Stromversorgung",
+            "PowerOff": "Drucker auszuschalten",
             "Reboot": "Neustart",
             "Restart": "Neustart",
             "ServiceControl": "Dienst-Steuerung",
@@ -649,7 +650,8 @@
             "PrinterSwitchedOff": "Drucker ist ausgeschaltet",
             "PrinterSwitchedOffDescription": "Der Drucker ist ausgeschaltet und es kann keine Verbindung zu Klipper hergestellt werden. Um den Drucker einzuschalten, auf die Schaltfläche unten klicken:",
             "Restart": "Neustart",
-            "ServiceReports": "{service} meldet"
+            "ServiceReports": "{service} meldet",
+            "TurnOnPrinter": "Printer einschalten"
         },
         "MachineSettingsPanel": {
             "Headline": "Maschine",
