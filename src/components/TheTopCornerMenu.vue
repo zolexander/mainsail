@@ -110,6 +110,12 @@
                         <v-icon class="mr-2" small>{{ mdiPower }}</v-icon>
                     </v-list-item-action>
                 </v-list-item>
+                <v-list-item class="minheight30 pr-2" link @click="shutdownPrinter">
+                    <v-list-item-title>Shutdown Printer</v-list-item-title>
+                    <v-list-item-action class="my-0 d-flex flex-row" style="min-width: auto">
+                        <v-icon class="mr-2" small>{{ mdiPower }}</v-icon>
+                    </v-list-item-action>
+                </v-list-item>
             </v-list>
         </v-menu>
         <v-dialog v-model="dialogPowerDeviceChange.show" width="400" :fullscreen="isMobile">
@@ -182,7 +188,7 @@ import {
     mdiToggleSwitch,
     mdiToggleSwitchOff,
 } from '@mdi/js'
-
+import { AuthData } from '@/store/types'
 interface dialogPowerDeviceChange {
     show: boolean
     device: string
@@ -258,7 +264,41 @@ export default class TheTopCornerMenu extends Mixins(BaseMixin) {
 
         return null
     }
+    async shutdownPrinter() {
+        this.showMenu = false;
+        const name_of_switch = 'switch.ledvance';
+        const entity: AuthData = {
+            token: import.meta.env.VUE_APP_TOKEN,
+            data: { "entity_id": `${name_of_switch}`}
+        }
+        const headers = { Authorization: `Bearer ${entity.token}`,
+                        'Access-Control-Allow-Origin': '*',
+                        'Content-Type': 'application/json',
+         };
+        const state_of_switch = `${import.meta.env.VUE_APP_HOME_ASSISTANT_URI}/api/states/${name_of_switch}`;
+        const turn_off_url = `${import.meta.env.VUE_APP_HOME_ASSISTANT_URI}/api/services/switch/turn_off`;
+        fetch(state_of_switch,{
+            method: 'GET',
+            mode: 'cors',
+            headers: {
+                'Authorization': `Bearer ${entity.token}`,
+                'Content-Type': 'application/json',
+            }
 
+        }).then((response)=>response.json()).then(async(json)=>{
+            if(json.state === 'on') {
+                await fetch(turn_off_url,{
+                    method: 'POST',
+                    body: JSON.stringify(entity.data),
+                    mode: 'cors',
+                    headers: {
+                        'Authorization': `Bearer ${entity.token}`,
+                        'Content-Type': 'application/json',
+                    }
+                });
+            }
+        });
+    }
     checkDialog(executableFunction: any, serviceName: string, action: string) {
         if (this.printerIsPrinting) {
             this.dialogConfirmation.executableFunction = executableFunction

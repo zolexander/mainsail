@@ -58,3 +58,7 @@ export interface Theme {
     }
     css?: boolean
 }
+export interface AuthData {
+    token:string;
+    data: {entity_id:string}
+}

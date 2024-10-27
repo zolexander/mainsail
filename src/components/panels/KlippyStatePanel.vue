@@ -21,6 +21,10 @@
                             <v-icon class="mr-sm-2">{{ mdiRestart }}</v-icon>
                             {{ $t('Panels.KlippyStatePanel.FirmwareRestart') }}
                         </v-btn>
+                        <v-btn small outlined text :class="buttonClasses" :disabled="isDisabled" @click="startPrinter">
+                            <v-icon class="mr-sm-2">{{ mdiRestart }}</v-icon>
+                            Start Printer
+                        </v-btn>
                     </v-col>
                     <!-- LOG DOWNLOAD BUTTONS -->
                     <v-col>
@@ -87,6 +91,7 @@ import { Mixins } from 'vue-property-decorator'
 import BaseMixin from '../mixins/base'
 import ConnectionStatus from '../ui/ConnectionStatus.vue'
 import Panel from '@/components/ui/Panel.vue'
+import { AuthData } from '@/store/types'
 import {
     mdiRestart,
     mdiDownload,
@@ -148,6 +153,65 @@ export default class KlippyStatePanel extends Mixins(BaseMixin) {
 
     firmwareRestart() {
         this.$socket.emit('printer.firmware_restart', {}, { loading: 'firmwareRestart' })
+    }
+    isDisabled = false;
+    async startPrinter() {
+        function sleep(ms:number) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+        const name_of_switch = 'switch.ledvance';
+        const entity: AuthData = {
+            token: import.meta.env.VUE_APP_TOKEN,
+            data: { "entity_id": `${name_of_switch}`}
+        }
+        const headers = { Authorization: `Bearer ${entity.token}`,
+                        'Access-Control-Allow-Origin': '*',
+                        'Content-Type': 'application/json',
+         };
+        const state_of_switch = `${import.meta.env.VUE_APP_HOME_ASSISTANT_URI}/api/states/${name_of_switch}`;
+        const turn_on_url = `${import.meta.env.VUE_APP_HOME_ASSISTANT_URI}/api/services/switch/turn_on`;
+        fetch(state_of_switch,{
+            method: 'GET',
+            mode: 'cors',
+            headers: {
+                'Authorization': `Bearer ${entity.token}`,
+                'Content-Type': 'application/json',
+            }
+
+        }).then((response)=>response.json()).then(async(json)=>{
+            if(json.state === 'off') {
+                await fetch(turn_on_url,{
+                    method: 'POST',
+                    body: JSON.stringify(entity.data),
+                    mode: 'cors',
+                    headers: {
+                        'Authorization': `Bearer ${entity.token}`,
+                        'Content-Type': 'application/json',
+                    }
+                });
+                sleep(3000).then(()=>{
+                    fetch(state_of_switch,{
+                        method: 'GET',
+                        mode: 'cors',
+                        headers: {
+                            'Authorization': `Bearer ${entity.token}`,
+                            'Content-Type': 'application/json',
+                        }
+
+                    }).then((response)=>response.json()).then((json)=>{
+                        if(json.state === 'on') {
+                            this.$socket.emit('printer.firmware_restart', {}, { loading: 'firmwareRestart' })
+                        } else {
+                            this.isDisabled = true;
+                        }
+                    })
+                });
+            } else {
+                this.isDisabled = true;
+            }
+        })
+
+
     }
 
     downloadLog(event: any) {
