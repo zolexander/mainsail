@@ -91,6 +91,7 @@ import { mdiAlertOctagonOutline, mdiContentSave, mdiFileUpload, mdiClose, mdiClo
 import EmergencyStopDialog from '@/components/dialogs/EmergencyStopDialog.vue'
 import InlineSvg from 'vue-inline-svg'
 import ThemeMixin from '@/components/mixins/theme'
+import { sleep } from '@/store/mutations'
 
 type uploadSnackbar = {
     status: boolean
@@ -245,9 +246,14 @@ export default class TheTopbar extends Mixins(BaseMixin, ThemeMixin) {
         this.$socket.emit('printer.emergency_stop', {}, { loading: 'topbarEmergencyStop' })
     }
 
-    saveConfig() {
-        this.$store.dispatch('server/addEvent', { message: 'SAVE_CONFIG', type: 'command' })
+    async saveConfig() {
+        await this.$store.dispatch('server/addEvent', { message: 'SAVE_CONFIG', type: 'command' })
         this.$socket.emit('printer.gcode.script', { script: 'SAVE_CONFIG' }, { loading: 'topbarSaveConfig' })
+        sleep(3000).then(async ()=>{
+                const gcode = `BED_MESH_PROFILE LOAD="${import.meta.env.VUE_APP_DEFAULT_PROFILE}"`
+                await this.$store.dispatch('server/addEvent', { message: gcode, type: 'command' })
+                this.$socket.emit('printer.gcode.script', { script: gcode }, { loading: `bedMeshLoad_${import.meta.env.VUE_APP_DEFAULT_PROFILE}` })
+        });
     }
 
     btnUploadAndStart() {

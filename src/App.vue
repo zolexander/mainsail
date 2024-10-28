@@ -45,6 +45,8 @@ import TheScrewsTiltAdjustDialog from '@/components/dialogs/TheScrewsTiltAdjustD
 import { setAndLoadLocale } from './plugins/i18n'
 import TheMacroPrompt from '@/components/dialogs/TheMacroPrompt.vue'
 import { AppRoute } from '@/routes'
+import { sleep } from './store/mutations'
+import { ref, watch } from 'vue'
 
 Component.registerHooks(['metaInfo'])
 
@@ -66,6 +68,8 @@ Component.registerHooks(['metaInfo'])
     },
 })
 export default class App extends Mixins(BaseMixin, ThemeMixin) {
+
+
     public metaInfo(): any {
         let title = this.$store.getters['getTitle']
 
@@ -331,7 +335,6 @@ export default class App extends Mixins(BaseMixin, ThemeMixin) {
         favicon16.href = favicon
         favicon32.href = favicon
     }
-
     @Watch('customFavicons')
     customFaviconsChanged(): void {
         this.drawFavicon(this.print_percent)
@@ -392,6 +395,7 @@ export default class App extends Mixins(BaseMixin, ThemeMixin) {
     }
 
     mounted(): void {
+
         this.drawFavicon(this.print_percent)
         this.appHeight()
         window.addEventListener('resize', this.appHeight)
