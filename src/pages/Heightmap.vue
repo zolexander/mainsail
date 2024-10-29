@@ -8,6 +8,7 @@
                 <v-col class="col-12 col-md-4">
                     <heightmap-current-profile-panel />
                     <heightmap-profiles-panel />
+                    <temperature-panel />
                 </v-col>
             </template>
             <template v-else>
@@ -33,7 +34,7 @@ import BaseMixin from '@/components/mixins/base'
 
 import Panel from '@/components/ui/Panel.vue'
 import { mdiLockOutline } from '@mdi/js'
-
+import TemperaturePanel from '@/components/panels/TemperaturePanel.vue'
 @Component({
     components: { Panel },
 })
