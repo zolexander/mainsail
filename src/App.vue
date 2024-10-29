@@ -156,7 +156,6 @@ export default class App extends Mixins(BaseMixin, ThemeMixin) {
 
         return '#ffffff'
     }
-
     get cssVars(): { [key: string]: string } {
         return {
             '--v-btn-text-primary': this.primaryTextColor,

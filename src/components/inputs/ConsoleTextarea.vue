@@ -29,6 +29,7 @@ import ConsoleMixin from '@/components/mixins/console'
 import { mdiSend, mdiChevronDoubleRight } from '@mdi/js'
 import { VTextareaType } from '@/store/printer/types'
 import { strLongestEqual } from '@/plugins/helpers'
+import { sleep } from '@/store/mutations'
 
 @Component
 export default class ConsoleTextarea extends Mixins(BaseMixin, ConsoleMixin) {
@@ -75,19 +76,37 @@ export default class ConsoleTextarea extends Mixins(BaseMixin, ConsoleMixin) {
         }
     }
 
-    doSend(cmd: KeyboardEvent) {
+    async doSend(cmd: KeyboardEvent) {
         if (cmd.shiftKey) {
             this.gcode += '\n'
             return
         }
 
         if (this.gcode === '') return
+        if(this.gcode.toUpperCase() !=='SAVE_CONFIG') {
+
 
         this.$store.dispatch('printer/sendGcode', this.gcode)
         this.$store.dispatch('gui/gcodehistory/addToHistory', this.gcode)
         this.gcode = ''
-        this.lastCommandNumber = null
+        } else {
+            this.$store.dispatch('printer/sendGcode', this.gcode).then(()=>{
+                this.$store.dispatch('gui/gcodehistory/addToHistory', this.gcode).then(()=>{
+                    this.lastCommandNumber = null;
+                    sleep(6000).then(async() =>{
+                        this.onKeyDown();
+                        this.gcode = `BED_MESH_PROFILE LOAD="${import.meta.env.VUE_APP_DEFAULT_PROFILE}"`
+                        this.$store.dispatch('printer/sendGcode', this.gcode).then(()=>{
+                            this.$store.dispatch('gui/gcodehistory/addToHistory', this.gcode);
+                            this.lastCommandNumber = null
+                        })
+                })
+
+
+            });
+        })
     }
+}
 
     onAutocomplete(e: Event): void {
         e.preventDefault()

@@ -87,6 +87,7 @@ import CommandHelpModal from '@/components/CommandHelpModal.vue'
 import { mdiCog, mdiTrashCan } from '@mdi/js'
 import ConsoleMixin from '@/components/mixins/console'
 import ConsoleTextarea from '@/components/inputs/ConsoleTextarea.vue'
+import { sleep } from '@/store/mutations'
 
 @Component({
     components: {
@@ -120,7 +121,7 @@ export default class PageConsole extends Mixins(BaseMixin, ConsoleMixin) {
     }
 
     commandClick(msg: string): void {
-        this.gcodeCommandField.setGcode(msg)
+            this.gcodeCommandField.setGcode(msg)
     }
 
     mounted() {
