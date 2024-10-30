@@ -327,6 +327,7 @@
         "BedMeshCalibrate": "Bed Mesh Calibrate",
         "BedMeshRemove": "Bed Mesh Remove",
         "Calibrate": "calibrate",
+        "CalibrateOnTemperature": "HotCalibrate",
         "Clear": "clear",
         "CurrentMesh": {
             "Headline": "Current Mesh",

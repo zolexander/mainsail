@@ -6,9 +6,9 @@
                     <heightmap-chart-panel />
                 </v-col>
                 <v-col class="col-12 col-md-4">
+                    <temperature-panel />
                     <heightmap-current-profile-panel />
                     <heightmap-profiles-panel />
-                    <temperature-panel />
                 </v-col>
             </template>
             <template v-else>

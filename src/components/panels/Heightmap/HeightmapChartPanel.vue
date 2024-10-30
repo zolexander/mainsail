@@ -33,6 +33,16 @@
                 @click="calibrateDialog = true">
                 {{ $t('Heightmap.Calibrate') }}
             </v-btn>
+            <v-btn
+                text
+                tile
+                class="d-none d-sm-flex"
+                :loading="loadings.includes('bedMeshCalibrate')"
+                :disabled="printerIsPrinting"
+                :title="$t('Heightmap.TitleCalibrate')"
+                @click="calibrateTempDialog = true">
+                {{ $t('Heightmap.CalibrateOnTemperature') }}
+            </v-btn>
         </template>
         <v-card-text class="d-sm-none text-center pb-0">
             <v-item-group tile class="v-btn-toggle" name="controllers">
@@ -69,7 +79,7 @@
                     :disabled="printerIsPrinting"
                     :title="$t('Heightmap.TitleCalibrate')"
                     @click="calibrateDialog = true">
-                    {{ $t('Heightmap.Calibrate') }}
+                    {{ $t('Heightmap.CalibrateOnTemperature') }}
                 </v-btn>
             </v-item-group>
         </v-card-text>
@@ -129,6 +139,8 @@
             </v-card-text>
         </template>
         <heightmap-calibrate-mesh-dialog :show="calibrateDialog" @close="calibrateDialog = false" />
+        <heightmap-calibrate-mesh-dialog-with-temperature :show="calibrateTempDialog" @close="calibrateTempDialog = false" />
+
     </panel>
 </template>
 <script lang="ts">
@@ -138,19 +150,21 @@ import { mdiGrid, mdiHome } from '@mdi/js'
 import ControlMixin from '@/components/mixins/control'
 import BedmeshMixin from '@/components/mixins/bedmesh'
 import HeightmapCalibrateMeshDialog from '@/components/dialogs/HeightmapCalibrateMeshDialog.vue'
+import HeightmapCalibrateMeshDialogWithTemperature from '@/components/dialogs/HeightmapCalibrateMeshDialogWithTemperature.vue'
 
 @Component({
-    components: { HeightmapCalibrateMeshDialog },
+    components: { HeightmapCalibrateMeshDialog,HeightmapCalibrateMeshDialogWithTemperature },
 })
 export default class HeightmapChartPanel extends Mixins(BaseMixin, ControlMixin, BedmeshMixin) {
     mdiGrid = mdiGrid
     mdiHome = mdiHome
-
     calibrateDialog = false
-
+    calibrateTempDialog = false
+    meshName = '';
     get showProbed(): boolean {
         return this.$store.state.gui.view.heightmap.probed ?? true
     }
+
 
     set showProbed(newVal) {
         this.$store.dispatch('gui/saveSetting', { name: 'view.heightmap.probed', value: newVal })
