@@ -70,19 +70,21 @@ export default class HeightmapRenameProfileDialogWithTemperature extends Mixins(
             this.$store.dispatch('server/addEvent',{message: preheat,type: 'command'}).then(()=>{
                 this.$socket.emit('printer.gcode.script', { script: preheat }, { loading: 'homeAll' })
                 this.$store.dispatch('server/addEvent', {message:"M190 S60",type:'command'}).then(()=>{
-                    this.$store.dispatch('server/addEvent',{message: 'G28',type: 'command'}).then(()=>{
-                        this.$socket.emit('printer.gcode.script', { script: 'M190 S60' }, { loading: 'homeAll' })
+                        this.$socket.emit('printer.gcode.script', { script: 'M190 S60' })
                         this.$store.dispatch('server/addEvent', { message: gcode, type: 'command' })
                         this.$socket.emit('printer.gcode.script', { script: gcode }, { loading: 'bedMeshCalibrate' })
                         this.$store.dispatch('server/addEvent',{message: 'G28',type: 'command'}).then(()=>{
                         this.$socket.emit('printer.gcode.script', { script: 'G28' }, { loading: 'homeAll' })
                         this.$store.dispatch('server/addEvent', { message: this.cooldownGcode, type: 'command' })
                         this.$socket.emit('printer.gcode.script', { script: this.cooldownGcode })
+                        this.$store.dispatch('server/addEvent',{ message: 'G91', type: 'command'})
+                        this.$socket.emit('printer.gcode.script',{ script: 'G91'})
+                        this.$store.dispatch('server/addEvent',{ message: 'G1 Z+100 F1500', type: 'command'})
+                        this.$socket.emit('printer.gcode.script',{ script: 'G1 Z+100 F1500'})
                     });
-                })
+                });
             });
         });
-    });
         this.closeDialog()
     }
 
